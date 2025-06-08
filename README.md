@@ -122,7 +122,7 @@ pytest
 pytest --cov=app --cov-report=term-missing --cov-report=html --cov-config=.coveragerc
 ```
 
-### Game Simumation
+### Game Simulation
 #### Run Concurrent Game Simulation
 ```bash
 python -m app.scripts.simulation
