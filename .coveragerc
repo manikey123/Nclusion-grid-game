@@ -1,0 +1,12 @@
+[run]
+omit =
+    */__init__.py
+    app/scripts/*
+    app/config.py
+    app/database.py
+
+[report]
+exclude_lines =
+    pragma: no cover
+    if __name__ == .__main__.:
+    raise NotImplementedError

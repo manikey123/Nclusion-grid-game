@@ -3,5 +3,9 @@
 
 # python
 __pycache__
+
+# ignore files
 game_engine.db
 test_game_engine.db
+.coverage
+htmlcov/

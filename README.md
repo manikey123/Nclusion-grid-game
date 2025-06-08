@@ -12,7 +12,7 @@ To run the tests:
 pytest
 
 # Run all tests with coverage
-pytest --cov=app
+pytest --cov=app --cov-report=term-missing --cov-report=html --cov-config=.coveragerc
 
 ```
 
