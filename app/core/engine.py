@@ -24,7 +24,10 @@ class GameEngine:
         if not GameEngine.is_valid_move(session, player_id, row, col):
             return False
         
-        session.game_state[row][col] = player_id
+        # We need to Deep copy because of complex Json column
+        new_game_state = [row[:] for row in session.game_state]  
+        new_game_state[row][col] = player_id
+        session.game_state = new_game_state 
         
         if GameEngine.check_winner(session.game_state, player_id):
             session.winner_id = player_id
