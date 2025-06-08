@@ -1,25 +1,13 @@
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-# from app.database import engine, Base
-from fastapi.responses import HTMLResponse
+from app.database import engine, Base
+from app.player.routes import router as player_router
 
+Base.metadata.create_all(bind=engine)
 
-# Create the database tables
-# Base.metadata.create_all(bind=engine)
+app = FastAPI(title="Grid Game Engine")
 
-app = FastAPI(title="Game Engine API")
-
-# Add CORS middleware
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-# Include routers
+app.include_router(player_router, prefix="/api/v1/players", tags=["players"])
 
 @app.get("/")
-async def root():
-    return HTMLResponse(content="<h1>Hello World</h1>", status_code=200)
+def root():
+    return {"message": "Grid Game Engine API"}

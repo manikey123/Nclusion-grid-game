@@ -3,3 +3,5 @@
 
 # python
 __pycache__
+game_engine.db
+test_game_engine.db

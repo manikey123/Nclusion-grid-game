@@ -14,5 +14,5 @@ class PlayerResponse(BaseModel):
     win_rate: float
     created_at: datetime
 
-    class Config:
+    class ConfigDict:
         from_attributes = True
