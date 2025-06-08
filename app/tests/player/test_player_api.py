@@ -1,7 +1,7 @@
 from fastapi.testclient import TestClient
 
 def test_create_player_success(client: TestClient):
-    response = client.post("/api/v1/players/", json={
+    response = client.post("/api/v1/player/", json={
         "username": "testuser",
         "email": "test@example.com"
     })
@@ -15,13 +15,13 @@ def test_create_player_success(client: TestClient):
 
 def test_create_player_duplicate_username(client: TestClient):
     # Create first player
-    client.post("/api/v1/players/", json={
+    client.post("/api/v1/player/", json={
         "username": "testuser",
         "email": "test1@example.com"
     })
     
     # Try to create player with same username
-    response = client.post("/api/v1/players/", json={
+    response = client.post("/api/v1/player/", json={
         "username": "testuser",
         "email": "test2@example.com"
     })
@@ -30,13 +30,13 @@ def test_create_player_duplicate_username(client: TestClient):
 
 def test_create_player_duplicate_email(client: TestClient):
     # Create first player
-    client.post("/api/v1/players/", json={
+    client.post("/api/v1/player/", json={
         "username": "testuser1",
         "email": "test@example.com"
     })
     
     # Try to create player with same email
-    response = client.post("/api/v1/players/", json={
+    response = client.post("/api/v1/player/", json={
         "username": "testuser2",
         "email": "test@example.com"
     })
@@ -44,19 +44,19 @@ def test_create_player_duplicate_email(client: TestClient):
     assert "Email already exists" in response.json()["detail"]
 
 def test_get_player_success(client: TestClient):
-    create_response = client.post("/api/v1/players/", json={
+    create_response = client.post("/api/v1/player/", json={
         "username": "testuser",
         "email": "test@example.com"
     })
     player_id = create_response.json()["id"]
     
-    response = client.get(f"/api/v1/players/{player_id}")
+    response = client.get(f"/api/v1/player/{player_id}")
     assert response.status_code == 200
     data = response.json()
     assert data["id"] == player_id
     assert data["username"] == "testuser"
 
 def test_get_player_not_found(client: TestClient):
-    response = client.get("/api/v1/players/999")
+    response = client.get("/api/v1/player/999")
     assert response.status_code == 404
     assert "Player not found" in response.json()["detail"]
