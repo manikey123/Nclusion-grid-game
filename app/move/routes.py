@@ -1,7 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.database import get_db
+from app.game_session.schemas import GameSessionStatus
 from app.game_session.service import GameSessionService
+from app.leaderboard.service import LeaderboardService
 from app.core.engine import GameEngine
 from app.move.service import MoveService
 from app.move.schemas import (
@@ -15,6 +17,7 @@ from app.move.schemas import (
 router = APIRouter()
 game_session_service = GameSessionService()
 move_service = MoveService()
+leader_board_service = LeaderboardService()
 
 @router.post("/", response_model=CreateMoveResponse)
 def make_move(request: CreateMoveRequest, db: Session = Depends(get_db)):
@@ -25,6 +28,7 @@ def make_move(request: CreateMoveRequest, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Session not found")
     
     success = GameEngine.make_move(session, request.player_id, request.row, request.col)
+
     if not success:
         if session.status.value != "ACTIVE":
             error_msg = f"Game is not active (status: {session.status.value})"
@@ -42,9 +46,12 @@ def make_move(request: CreateMoveRequest, db: Session = Depends(get_db)):
     move = move_service.create_move(
         db, request.session_id, request.player_id, request.row, request.col
     )
+    if(session.status == GameSessionStatus.COMPLETED):
+        leader_board_service.update_player_stats(db, session.winner_id)
     
     return CreateMoveResponse(
         id=move.id,
+        session_id = session.id,
         game_state=session.game_state,
         game_status=session.status.value,
         winner_id=session.winner_id,

@@ -26,6 +26,7 @@ class MoveResponse(BaseModel):
 
 class CreateMoveResponse(BaseModel):
     id: int
+    session_id: int
     game_state: List[List[int]]
     game_status: str
     winner_id: Optional[int]
